@@ -1,0 +1,25 @@
+dg_sprint_hunger_ng.aux1 (Enable AUX1 sprinting) bool true
+dg_sprint_hunger_ng.double_tap (Enable double tap sprinting) bool true
+dg_sprint_hunger_ng.particles (Enable sprinting particles) bool true
+
+# By default the hunger bar is shown and hidden based on
+# some circumstances. Some mods might have issues when
+# the hunger bar is shown.
+#
+# When set to `false` the default hunger bar won’t be
+# registered and all functions altering the hunger bar
+# are disabled.
+#
+# Hunger itself and mod interoperability functionality
+# work like before.
+hunger_ng_use_hunger_bar (Use the hunger bar) bool true
+
+# When the hunger is below this value the player starves
+# and loses health points. Set this value to -1 if you
+# want to disable this functionality.
+hunger_ng_starve_below (Starve when hunger is below this value) float 1
+
+dg_sprint_hunger_ng.drain_rate (Hunger drain rate while sprinting) float 5.0
+
+dg_sprint_hunger_ng.starve_cancel_sprint (Cancel sprinting when starving) bool false
+
