@@ -66,8 +66,7 @@ if settings.enable_hunger_bar then
     end)
 end
 
-
-if settings.cancel_sprint_in_liquid then
+if settings.enable_hunger_bar then
     -- Check if the player is in a liquid (Water or Lava)
     api.register_step(mod_name.. ":IN_LIQUID", (0.3), function(player, dtime)
         local name = player:get_player_name()
@@ -81,6 +80,25 @@ if settings.cancel_sprint_in_liquid then
                 player_data[name].in_liquid = true
             else
                 player_data[name].in_liquid = false
+            end
+        end
+    end)
+end
+
+if settings.cancel_sprint_in_liquid then
+    -- Check if the player is in a liquid (Water or Lava)
+    api.register_step(mod_name.. ":IN_LIQUID", (0.3), function(player, dtime)
+        local name = player:get_player_name()
+        local pos = player:get_pos()
+        local node_below = core.get_node_or_nil(pos)
+        if node_below then
+            local def = minetest.registered_nodes[node_below.name] or {}
+            local drawtype = def.drawtype
+            local is_liquid = drawtype == "liquid" or drawtype == "flowingliquid"
+            if is_liquid and not player_data[name].in_liquid then
+                api.cancel_sprint(player, true, mod_name .. ":IN_LIQUID")
+            else
+                api.cancel_sprint(player, false, mod_name .. ":IN_LIQUID")
             end
         end
     end)
