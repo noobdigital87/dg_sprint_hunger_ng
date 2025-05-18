@@ -46,36 +46,4 @@ dg_lib.getNodeDefinition = function(player, altPos)
     return nil
 end
 
-dg_lib.NodeIsLiquid = function(player, altPos)
-	local def = dg_lib.getNodeDefinition(player, altPos)
-	if def and ( def.drawtype == "liquid" or def.drawtype == "flowingliquid" ) then
-		return true
-	end
-	return false
-end
-
-dg_lib.NodeisWalkable = function(player, altPos)
-	local def = dg_lib.getNodeDefinition(player, altPos)
-	if def and def.walkable then
-		return true
-	end
-	return false
-end
-
-dg_lib.NodeisClimbable = function(player, altPos)
-	local def = dg_lib.getNodeDefinition(player, altPos)
-	if def and def.climbable then
-		return true
-	end
-	return false
-end
-
-dg_lib.NodeIsInSnowyGroup = function(player, altPos)
-	local def = dg_lib.getNodeDefinition(player, altPos)
-	if def and def.groups and def.groups and def.groups.snowy and def.groups.snowy > 0  then
-		return true
-	end
-	return false
-end
-
 return dg_lib
