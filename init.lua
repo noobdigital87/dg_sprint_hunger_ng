@@ -148,16 +148,18 @@ api.register_step(mod_name.. ":" .. NAME_CANCEL, 0.1, function(player, dtime)
     end
 end)
 
--- Check if the player is on the ground.
-api.register_step(mod_name.. ":GROUND", 0.4, function(player, dtime)
-    local pos = player:get_pos()
-    local node_below = core.get_node_or_nil({x = pos.x, y = pos.y - 1, z = pos.z})
-    if node_below then
-        local def = core.registered_nodes[node_below.name]
-        if def and def.walkable then
-            player_data[player:get_player_name()].on_ground = true
-        else
-            player_data[player:get_player_name()].on_ground = false
+if settings.enable_hunger_bar then
+    -- Check if the player is on the ground.
+    api.register_step(mod_name.. ":GROUND", 0.4, function(player, dtime)
+        local pos = player:get_pos()
+        local node_below = core.get_node_or_nil({x = pos.x, y = pos.y - 1, z = pos.z})
+        if node_below then
+            local def = core.registered_nodes[node_below.name]
+            if def and def.walkable then
+                player_data[player:get_player_name()].on_ground = true
+            else
+                player_data[player:get_player_name()].on_ground = false
+            end
         end
-    end
-end)
+    end)
+end
