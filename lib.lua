@@ -42,7 +42,7 @@ end
 
 dg_lib.NodeIsLiquid = function(player, altPos)
 	local def = dg_lib.getNodeDefinition(player, altPos)
-	if def and ( def.drawtype == "liquid" or def.drawtype == "flowingliquid" )
+	if def and ( def.drawtype == "liquid" or def.drawtype == "flowingliquid" ) then
 		return true
 	end
 	return false
