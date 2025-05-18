@@ -2,7 +2,7 @@ local api = dg_sprint_core
 
 local mod_name = core.get_current_modname()
 local player_data  = {}
-
+local dg_lib = dofile(core.get_modpath(mod_name) .. "/lib.lua")
 
 local settings = {
     enable_hunger_bar = core.settings:get_bool("hunger_ng_use_hunger_bar", true),
@@ -85,55 +85,24 @@ if settings.enable_hunger_bar then
     end)
 end
 
-if settings.cancel_sprint_in_liquid then
-    -- Check if the player is in a liquid (Water or Lava)
-    api.register_step(mod_name.. ":IN_LIQUID", (0.3), function(player, dtime)
-        local name = player:get_player_name()
-        local pos = player:get_pos()
-        local node_below = core.get_node_or_nil(pos)
-        if node_below then
-            local def = minetest.registered_nodes[node_below.name] or {}
-            local drawtype = def.drawtype
-            local is_liquid = drawtype == "liquid" or drawtype == "flowingliquid"
-            if is_liquid and not player_data[name].in_liquid then
-                api.cancel_sprint(player, true, mod_name .. ":IN_LIQUID")
-            else
-                api.cancel_sprint(player, false, mod_name .. ":IN_LIQUID")
-            end
-        end
-    end)
-end
-
-if settings.cancel_sprint_on_snow then
-    -- Check if the player is on snow
-    api.register_step(mod_name.. ":ON_SNOW", (0.3), function(player, dtime)
-        local pos = player:get_pos()
-        local check_pos = { x = pos.x, y = pos.y + 0.5, z = pos.z }
-        local node = core.get_node_or_nil(check_pos)
-        if node then
-            local def = core.registered_nodes[node.name]
-            if def and def.groups and def.groups.snowy and def.groups.snowy > 0 then
-                api.cancel_sprint(player, true, mod_name .. ":ON_SNOW")
-            else
-                api.cancel_sprint(player, false, mod_name .. ":ON_SNOW")
-            end
-        end
-    end)
-end
-
-if settings.cancel_sprint_on_starve then 
-    -- Cancel sprinting if the player is starving and settings are enabled
-    api.register_step(mod_name.. ":CANCEL", 0.4, function(player, dtime)
-        if settings.cancel_sprint_on_starve then
-            local p_name = player:get_player_name()
-            local info = hunger_ng.get_hunger_information(p_name)
-            if info.hunger.exact <= settings.starve_threshold then
-                api.cancel_sprint(player, true, mod_name .. ":CANCEL")
-            else
-                api.cancel_sprint(player, false, mod_name .. ":CANCEL")
-            end
-        end
-    end)
+if settings.cancel_sprint_in_liquid or settings.cancel_sprint_on_snow or settings.cancel_sprint_on_starve then
+        api.register_step(mod_name.. ":SPRINT_CANCELLATIONS", (0.3), function(player, dtime)
+                local pos = player:get_pos()
+                local def = dg_lib.getNodeDefinition(player,{ x = pos.x, y = pos.y + 0.5, z = pos.z })
+                local cancel = false
+                if settings.cancel_sprint_in_liquid and def and (def.drawtype == "liquid" or def.drawtype == "flowingliquid") then
+                    cancel = true
+                elseif settings.cancel_sprint_on_snow and def and def.groups and def.groups and def.groups.snowy and def.groups.snowy > 0 then
+                    cancel = true
+                elseif settings.cancel_sprint_on_starve and settings.enable_hunger_bar then
+                    local p_name = player:get_player_name()
+                    local info = hunger_ng.get_hunger_information(p_name)
+                    if info.hunger.exact <= settings.starve_threshold then
+                        cancel = true
+                    end
+                end
+                api.cancel_sprint(player, cancel, mod_name .. ":SPRINT_CANCELLATIONS")
+        end)
 end
 
 -- Prevent key detection when going backwards
@@ -144,7 +113,7 @@ api.register_step(mod_name.. ":" .. NAME_CANCEL, 0.1, function(player, dtime)
     if not control.down then
         api.prevent_detection(player, false, mod_name .. ":" .. NAME_CANCEL)
     else
-        api.prevent_detection(player, true, mod_name .. ":" .. NAME_CANCEL) 
+        api.prevent_detection(player, true, mod_name .. ":" .. NAME_CANCEL)
     end
 end)
 
