@@ -1,8 +1,6 @@
 # DG SPRINT: HUNGER  
 Enhance your sprinting experience with support for the [Hunger NG](https://content.luanti.org/packages/Linuxdirk/hunger_ng/) mod by LinuxDirk!
 
----
-
 ### Features & Customization
 
 ##### 1. Sprinting Controls: 
@@ -16,9 +14,9 @@ Enhance your sprinting experience with support for the [Hunger NG](https://conte
 ##### 4. Sprint Cancellations:
 - When standing in liquid (Disabled by default)
 - When standing on snow covers. Or nodes with the snowy group you can walk through. (Disabled by default)
----
+
 ### Dependency  
 - **Requires:**
 	- DG SPRINT: CORE  
 	- Hunger NG
----
+
