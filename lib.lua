@@ -15,29 +15,35 @@ dg_lib.getNodeDefinition = function(player, altPos)
     Returns:
         The node definition (table) if found, otherwise nil.
   ]]
-	if player and type(player) == "userdata" and core.is_player(player) then
-		local playerName = player:get_player_name()
-    		local position = player:get_pos()
-    		if altPos then
-      			assert(
-        			type(altPos) == "table" and
-        			type(altPos.x) == "number" and
-        			type(altPos.y) == "number" and
-        			type(altPos.z) == "number", "[dg_lib.getNodeDefinition] Invalid alternative position"
-      			)
-      			position = altPos
-    		end
-  
-    		local nodeBelow = core.get_node_or_nil(position)
-  
-    		if nodeBelow then
-      			local nodeDefinition = core.registered_nodes[nodeBelow.name]
-      			if nodeDefinition then
-        			return nodeDefinition
-      			end
-    		end
-	end
-	return nil
+
+    if not player then
+        return nil
+    end
+
+    local playerName = player:get_player_name()
+    local position = player:get_pos()
+
+    if altPos then
+        -- Ensure altPos is a valid position table
+        assert(
+            type(altPos) == "table" and
+            type(altPos.x) == "number" and
+            type(altPos.y) == "number" and
+            type(altPos.z) == "number",
+            "[dg_lib.getNodeDefinition] Invalid alternative position"
+        )
+        position = altPos
+    end
+
+    local nodeBelow = core.get_node_or_nil(position)
+    if nodeBelow then
+        local nodeDefinition = core.registered_nodes[nodeBelow.name]
+        if nodeDefinition then
+            return nodeDefinition
+        end
+    end
+
+    return nil
 end
 
 dg_lib.NodeIsLiquid = function(player, altPos)
