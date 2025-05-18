@@ -34,7 +34,8 @@ core.register_on_joinplayer(function(player, last_login)
 end)
 
 core.register_on_leaveplayer(function(player)
-    	player_data[player:get_player_name()] = nil
+	local name = player:get_player_name()
+    	player_data[name] = nil
 end)
 
 -- Sprint when key is detected and not attached to an object.
@@ -54,13 +55,13 @@ if settings.enable_hunger_bar then
 
         	-- Check for jump to start draining even when not on ground or in liquid
         	if not player_data[player:get_player_name()].in_liquid and control.jump and not draining then
-            	draining = true
+            		draining = true
         	end
 
         	-- Drain hunger when sprinting and conditions are met.
         	if draining then
             		local player_name = player:get_player_name()
-            			hunger_ng.alter_hunger(player_name, -( settings.drain_rate * dtime), 'Sprinting')
+            		hunger_ng.alter_hunger(player_name, -( settings.drain_rate * dtime), 'Sprinting')
         	end
     	end)
 end
@@ -69,9 +70,9 @@ if settings.enable_hunger_bar then
     	-- Check if the player is in a liquid (Water or Lava)
     	api.register_step(mod_name.. ":IN_LIQUID", (0.3), function(player, dtime)
 		local def = dg_lib.getNodeDefinition(player)
-            
+            	local name = player:get_player_name()
             	local is_liquid = def and def.drawtype == "liquid" or def.drawtype == "flowingliquid"
-            
+
             	if is_liquid then
                 	player_data[name].in_liquid = true
             	else
@@ -84,8 +85,9 @@ if settings.cancel_sprint_in_liquid or settings.cancel_sprint_on_snow or setting
         api.register_step(mod_name.. ":SPRINT_CANCELLATIONS", (0.3), function(player, dtime)
                 local pos = player:get_pos()
                 local def = dg_lib.getNodeDefinition(player,{ x = pos.x, y = pos.y + 0.5, z = pos.z })
+
                 local cancel = false
-                
+
 		if settings.cancel_sprint_in_liquid and def and (def.drawtype == "liquid" or def.drawtype == "flowingliquid") then
                     	cancel = true
                 elseif settings.cancel_sprint_on_snow and def and def.groups and def.groups and def.groups.snowy and def.groups.snowy > 0 then
@@ -93,7 +95,7 @@ if settings.cancel_sprint_in_liquid or settings.cancel_sprint_on_snow or setting
                 elseif settings.cancel_sprint_on_starve and settings.enable_hunger_bar then
 	                local p_name = player:get_player_name()
                 	local info = hunger_ng.get_hunger_information(p_name)
-	                
+
 			if info.hunger.exact <= settings.starve_threshold then
                         	cancel = true
                     	end
@@ -117,8 +119,8 @@ end)
 if settings.enable_hunger_bar then
 	-- Check if the player is on the ground.
     	api.register_step(mod_name.. ":GROUND", 0.4, function(player, dtime)
-        	local pos = player:get_pos( {x = pos.x, y = pos.y - 1, z = pos.z} )
-        	local def = dg_lib.getNodeDefinition(player)
+        	local pos = player:get_pos()
+        	local def = dg_lib.getNodeDefinition(player, {x = pos.x, y = pos.y - 1, z = pos.z})
         	if def and def.walkable then
             		player_data[player:get_player_name()].on_ground = true
         	else
