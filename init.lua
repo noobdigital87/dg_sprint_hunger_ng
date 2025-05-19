@@ -128,12 +128,15 @@ end)
 if settings.enable_hunger_bar then
 	-- Check if the player is on the ground.
     	api.register_step(mod_name.. ":GROUND", 1, function(player, dtime)
+		local name = player:get_player_name()
         	local pos = player:get_pos()
         	local def = dg_lib.getNodeDefinition(player, {x = pos.x, y = pos.y - 1, z = pos.z})
-        	if def and def.walkable then
-            		player_data[player:get_player_name()].on_ground = true
-        	else
-            		player_data[player:get_player_name()].on_ground = false
+        	if def then
+			if def.walkable and not player_data[name].on_ground then
+				player_data[name].on_ground = true
+        		elseif not def.walkable and player_data[name].on_ground then
+            			player_data[name].on_ground = false
+			end
         	end
     	end)
 end
