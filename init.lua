@@ -19,6 +19,7 @@ local function create_pdata()
         	on_ground = true,
         	in_liquid = false,
         	on_snow = false,
+		is_sprinting = false,
    	}
 end
 
