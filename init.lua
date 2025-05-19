@@ -82,9 +82,9 @@ if settings.enable_hunger_bar then
             	local name = player:get_player_name()
             	local is_liquid = def and def.drawtype == "liquid" or def.drawtype == "flowingliquid"
 
-            	if is_liquid then
+            	if is_liquid and not player_data[name].in_liquid then
                 	player_data[name].in_liquid = true
-            	else
+            	elseif not is_liquid and player_data[name].in_liquid then
                 	player_data[name].in_liquid = false
             	end
     	end)
