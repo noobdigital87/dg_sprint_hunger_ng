@@ -38,10 +38,18 @@ core.register_on_leaveplayer(function(player)
     	player_data[name] = nil
 end)
 
--- Sprint when key is detected and not attached to an object.
 api.register_step(mod_name.. ":SPRINT", (0.3), function(player, dtime)
-    	local key_detected = api.is_key_detected(player) and not player:get_attach()
-    	api.sprint(player, key_detected)
+    local key_detected = api.is_key_detected(player) and not player:get_attach()
+    local name = player:get_player_name()
+
+    -- Only call sprint when state changes
+    if key_detected and not player_data[name].is_sprinting then
+        player_data[name].is_sprinting = true
+        api.sprint(player, true) -- Start sprinting
+    elseif not key_detected and player_data[name].is_sprinting then
+        player_data[name].is_sprinting = false
+        api.sprint(player, false) -- Stop sprinting
+    end
 end)
 
 if settings.enable_hunger_bar then
