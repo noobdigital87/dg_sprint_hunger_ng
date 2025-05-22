@@ -36,7 +36,7 @@ end)
 dg_sprint_core.RegisterStep(your_mod_name, "SPRINT", settings.sprint_step, function(player, state, dtime)
 	local detected = state.detected
 	dg_sprint_core.Sprint(your_mod_name, player, detected, {speed = 0.8, jump = 0.1})
-	if detected then
+	if detected and settings.particles then
 		dg_sprint_core.ShowParticles(player:get_pos())
 	end
 	if detected ~= state.is_sprinting then
