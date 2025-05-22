@@ -40,7 +40,7 @@ dg_sprint_core.RegisterStep(your_mod_name, "SPRINT", settings.sprint_step, funct
 	end
 			
 	if game_info == "VoxeLibre" then
-		dg_sprint_core.VoxeLibreSprint(player, sprint)
+		dg_sprint_core.VoxeLibreSprint(player, state.detected)
 	else		
 		dg_sprint_core.Sprint(your_mod_name, player, state.detected, {speed = 0.8, jump = 0.1})
 	end
