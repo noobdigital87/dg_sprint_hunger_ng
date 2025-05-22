@@ -24,7 +24,7 @@ local settings = {
         drain_step = get_settings_number(your_mod_name .. ".drain_step", 0.2),
         cancel_step = get_settings_number(your_mod_name .. ".cancel_step", 0.3),
 }
-
+local game_info = core.get_game_info()
 dg_sprint_core.RegisterStep(your_mod_name, "DETECT", settings.detection_step, function(player, state, dtime)
 	local detected = dg_sprint_core.IsSprintKeyDetected(player, settings.aux1, settings.double_tap, settings.tap_interval) and dg_sprint_core.IsMoving(player) and not player:get_attach()
 	if detected ~= state.detected then
@@ -34,15 +34,20 @@ dg_sprint_core.RegisterStep(your_mod_name, "DETECT", settings.detection_step, fu
 end)
 
 dg_sprint_core.RegisterStep(your_mod_name, "SPRINT", settings.sprint_step, function(player, state, dtime)
-	local detected = state.detected
-	dg_sprint_core.Sprint(your_mod_name, player, detected, {speed = 0.8, jump = 0.1})
-	if detected and settings.particles then
+			
+	if state.detected and settings.particles then
 		dg_sprint_core.ShowParticles(player:get_pos())
 	end
+			
+	if game_info == "VoxeLibre" then
+		dg_sprint_core.VoxeLibreSprint(player, sprint)
+	else		
+		dg_sprint_core.Sprint(your_mod_name, player, state.detected, {speed = 0.8, jump = 0.1})
+	end
+	
 	if detected ~= state.is_sprinting then
 		state.is_sprinting = detected
 	end
-	
 end)
 
 if settings.enable_sprint then
