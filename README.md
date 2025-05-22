@@ -14,11 +14,6 @@ Enhance your sprinting experience with support for the [Hunger NG](https://conte
 ##### 4. Sprint Cancellations:
 - When standing in liquid (Disabled by default)
 - When standing on snow covers. Or nodes with the snowy group you can walk through. (Disabled by default)
-##### 5. Supported mods
-- Player Monoids
-- Pova
-- 3D Armor
-
 ---
 ### Dependencies
 - **Requires:**
