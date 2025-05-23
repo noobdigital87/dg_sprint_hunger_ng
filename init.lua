@@ -30,23 +30,15 @@ dg_sprint_core.RegisterStep(your_mod_name, "DETECT", settings.detection_step, fu
 	if detected ~= state.detected then
 		state.detected = detected
 	end
-
 end)
 
 dg_sprint_core.RegisterStep(your_mod_name, "SPRINT", settings.sprint_step, function(player, state, dtime)
-			
 	if state.detected and settings.particles then
 		dg_sprint_core.ShowParticles(player:get_pos())
-	end
-			
-	if game_info == "VoxeLibre" then
-		dg_sprint_core.VoxeLibreSprint(player, state.detected)
-	else		
-		dg_sprint_core.Sprint(your_mod_name, player, state.detected, {speed = 0.8, jump = 0.1})
-	end
-	
+	end	
 	if state.detected ~= state.is_sprinting then
-		state.is_sprinting = detected
+		state.is_sprinting = state.detected
+        dg_sprint_core.Sprint(your_mod_name, player, state.is_sprinting, {speed = 0.8, jump = 0.1})
 	end
 end)
 
@@ -63,6 +55,7 @@ if settings.enable_sprint then
 end
 
 dg_sprint_core.RegisterStep(your_mod_name , "SPRINT_CANCELLATIONS", settings.cancel_step, function(player, state, dtime)
+    
     local pos = player:get_pos()
     local node_pos = { x = pos.x, y = pos.y + 0.5, z = pos.z }
 
