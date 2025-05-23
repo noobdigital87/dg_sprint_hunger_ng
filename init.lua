@@ -40,7 +40,7 @@ dg_sprint_core.RegisterStep(your_mod_name, "SPRINT", settings.sprint_step, funct
 	end	
 	if state.detected ~= state.is_sprinting then
 		state.is_sprinting = state.detected
-        dg_sprint_core.Sprint(your_mod_name, player, state.is_sprinting, {speed = settings.speed, jump = settings.jump)
+        dg_sprint_core.Sprint(your_mod_name, player, state.is_sprinting, {speed = settings.speed, jump = settings.jump})
 	end
 end)
 
