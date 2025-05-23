@@ -23,8 +23,10 @@ local settings = {
         sprint_step = get_settings_number(your_mod_name .. ".sprint_step", 0.5),
         drain_step = get_settings_number(your_mod_name .. ".drain_step", 0.2),
         cancel_step = get_settings_number(your_mod_name .. ".cancel_step", 0.3),
+        speed = get_settings_number(your_mod_name .. ".speed", 0.8),
+        jump = get_settings_number(your_mod_name .. ".jump", 0.8),
 }
-local game_info = core.get_game_info()
+
 dg_sprint_core.RegisterStep(your_mod_name, "DETECT", settings.detection_step, function(player, state, dtime)
 	local detected = dg_sprint_core.IsSprintKeyDetected(player, settings.aux1, settings.double_tap, settings.tap_interval) and dg_sprint_core.IsMoving(player) and not player:get_attach()
 	if detected ~= state.detected then
@@ -38,7 +40,7 @@ dg_sprint_core.RegisterStep(your_mod_name, "SPRINT", settings.sprint_step, funct
 	end	
 	if state.detected ~= state.is_sprinting then
 		state.is_sprinting = state.detected
-        dg_sprint_core.Sprint(your_mod_name, player, state.is_sprinting, {speed = 0.8, jump = 0.1})
+        dg_sprint_core.Sprint(your_mod_name, player, state.is_sprinting, {speed = settings.speed, jump = settings.jump)
 	end
 end)
 

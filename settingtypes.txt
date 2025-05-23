@@ -5,6 +5,8 @@ dg_sprint_hunger_ng.double_tap      (Enable double tap sprinting)   bool true
 dg_sprint_hunger_ng.tap_interval    (Tap interval)                  float 0.5 0.1 2.0
 
 dg_sprint_hunger_ng.particles       (Enable sprinting particles)    bool true
+dg_sprint_hunger_ng.speed       (Jump boost)    float   0.8 
+dg_sprint_hunger_ng.jump       (Speed boost)    float   0.1
 
 # By default the hunger bar is shown and hidden based on
 # some circumstances. Some mods might have issues when
