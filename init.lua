@@ -24,7 +24,7 @@ local settings = {
         drain_step = get_settings_number(your_mod_name .. ".drain_step", 0.2),
         cancel_step = get_settings_number(your_mod_name .. ".cancel_step", 0.3),
         speed = get_settings_number(your_mod_name .. ".speed", 0.8),
-        jump = get_settings_number(your_mod_name .. ".jump", 0.8),
+        jump = get_settings_number(your_mod_name .. ".jump", 0.1),
 }
 
 dg_sprint_core.RegisterStep(your_mod_name, "DETECT", settings.detection_step, function(player, state, dtime)
