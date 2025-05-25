@@ -8,6 +8,9 @@ dg_sprint_hunger_ng.particles       (Enable sprinting particles)    bool true
 dg_sprint_hunger_ng.speed       (Jump boost)    float   0.8 
 dg_sprint_hunger_ng.jump       (Speed boost)    float   0.1
 
+
+[Hunger NG]
+
 # By default the hunger bar is shown and hidden based on
 # some circumstances. Some mods might have issues when
 # the hunger bar is shown.
@@ -29,11 +32,13 @@ hunger_ng_starve_below (Starve when hunger is below this value) float 1
 
 dg_sprint_hunger_ng.drain_rate (Hunger drain rate while sprinting) float 5.0
 
-dg_sprint_hunger_ng.liquid (Cancel sprinting when in liquid) bool false
+[Sprint Cancellations]
 
-dg_sprint_hunger_ng.snow (Cancel sprinting when on snow) bool false
+dg_sprint_hunger_ng.liquid (In liquid) bool false
 
-dg_sprint_hunger_ng.starve (Cancel sprinting when starving) bool false
+dg_sprint_hunger_ng.snow (On snow) bool false
+
+dg_sprint_hunger_ng.starve (When starving) bool false
 
 [Advanced]
 
