@@ -30,7 +30,7 @@ hunger_ng_use_hunger_bar (Use the hunger bar) bool true
 
 hunger_ng_starve_below (Starve when hunger is below this value) float 1
 
-dg_sprint_hunger_ng.drain_rate (Hunger drain rate while sprinting) float 5.0
+dg_sprint_hunger_ng.drain_rate (Hunger drain rate while sprinting) float 2.0
 
 [Sprint Cancellations]
 
@@ -46,4 +46,3 @@ dg_sprint_hunger_ng.detection_step (Detection step interval) float 0.1 0.1 1.0
 dg_sprint_hunger_ng.sprint_step (Sprint step interval) float 0.5 0.1 1.0
 dg_sprint_hunger_ng.drain_step (Drain step interval) float 0.2 0.1 1.0
 dg_sprint_hunger_ng.cancel_step (Sprint cancellation step interval) float 0.3 0.1 1.0
-
