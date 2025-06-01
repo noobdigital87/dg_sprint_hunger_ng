@@ -1,5 +1,7 @@
 local your_mod_name = core.get_current_modname()
 
+local api = dg_sprint_core.v2
+
 local function get_settings_boolean(setting_name, default)
     return core.settings:get_bool(setting_name, default)
 end
@@ -31,41 +33,38 @@ local settings = {
 	    fov_time_start = get_settings_number(your_mod_name..".fov_time_start", 0.2),
 }
 
-dg_sprint_core.RegisterStep(your_mod_name, "DETECT", settings.detection_step, function(player, state, dtime)
-	local detected = dg_sprint_core.IsSprintKeyDetected(player, settings.aux1, settings.double_tap, settings.tap_interval) and dg_sprint_core.IsMoving(player) and not player:get_attach()
+api.register_server_step(your_mod_name, "DETECT", settings.detection_step, function(player, state, dtime)
+    local control = player:get_player_control()
+	local detected = api.sprint_key_detected(player, (settings.aux1 and control.aux1), (settings.double_tap and control.up), settings.tap_interval)
 	if detected ~= state.detected then
 		state.detected = detected
 	end
 end)
 
-dg_sprint_core.RegisterStep(your_mod_name, "SPRINT", settings.sprint_step, function(player, state, dtime)
-	if state.detected and settings.particles then
-		dg_sprint_core.ShowParticles(player:get_pos())
-	end	
-	if state.detected ~= state.is_sprinting then
-		state.is_sprinting = state.detected
-        if settings.fov and state.is_sprinting then
-			dg_sprint_core.SetFov(player, settings.fov_value, true, settings.fov_time_start)
-		elseif settings.fov and not state.is_sprinting then
-			dg_sprint_core.SetFov(player, settings.fov_value, false, settings.fov_time_stop)
-		end
-        dg_sprint_core.Sprint(your_mod_name, player, state.is_sprinting, {speed = settings.speed, jump = settings.jump})
-	end
+api.register_server_step(your_mod_name, "SPRINT", settings.sprint_step, function(player, state, dtime)
+    if not settings.fov then
+        settings.fov_value = 0
+    end
+
+    if state.detected then
+        local sprint_settings = {speed = settings.speed, jump = settings.jump, particles = settings.particles, fov = settings.fov_value, transition = settings.fov_time_start}
+        api.set_sprint(your_mod_name, player, state.detected, sprint_settings)
+    else
+        local sprint_settings = {speed = settings.speed, jump = settings.jump, particles = settings.particles, fov = settings.fov_value, transition = settings.fov_time_stop}
+        api.set_sprint(your_mod_name, player, state.detected, sprint_settings)
+    end
 end)
 
 if settings.enable_sprint then
-    dg_sprint_core.RegisterStep(your_mod_name, "DRAIN", settings.drain_step, function(player, state, dtime)
-    	local is_sprinting = state.is_sprinting
-        if is_sprinting then
-    	    if dg_sprint_core.ExtraDrainCheck(player) then
-                local player_name = player:get_player_name()
-                hunger_ng.alter_hunger(player_name, -( settings.drain_rate * dtime), 'Sprinting')
-    	    end
+    api.register_server_step(your_mod_name, "DRAIN", settings.drain_step, function(player, state, dtime)
+        if state.detected then
+            local player_name = player:get_player_name()
+            hunger_ng.alter_hunger(player_name, -( settings.drain_rate * dtime), 'Sprinting')
         end
     end)
 end
 
-dg_sprint_core.RegisterStep(your_mod_name , "SPRINT_CANCELLATIONS", settings.cancel_step, function(player, state, dtime)
+api.register_server_step(your_mod_name , "SPRINT_CANCELLATIONS", settings.cancel_step, function(player, state, dtime)
     
     local pos = player:get_pos()
     local node_pos = { x = pos.x, y = pos.y + 0.5, z = pos.z }
@@ -84,5 +83,6 @@ dg_sprint_core.RegisterStep(your_mod_name , "SPRINT_CANCELLATIONS", settings.can
         end
     end
 
-    dg_sprint_core.prevent_detection(player, cancel, your_mod_name .. ":SPRINT_CANCELLATIONS")
+    api.set_sprint_cancel(player, cancel, your_mod_name .. ":SPRINT_CANCELLATIONS")
 end)
+
