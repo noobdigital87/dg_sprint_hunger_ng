@@ -30,7 +30,7 @@ local settings = {
         fov = get_settings_boolean(your_mod_name .. ".fov", true),
         fov_value = get_settings_number(your_mod_name .. ".fov_value", 15),
         fov_time_stop = get_settings_number(your_mod_name .. ".fov_time_stop", 0.4),
-	    fov_time_start = get_settings_number(your_mod_name..".fov_time_start", 0.2),
+	fov_time_start = get_settings_number(your_mod_name..".fov_time_start", 0.2),
 }
 
 api.register_server_step(your_mod_name, "DETECT", settings.detection_step, function(player, state, dtime)
@@ -57,7 +57,7 @@ end)
 
 if settings.enable_sprint then
     api.register_server_step(your_mod_name, "DRAIN", settings.drain_step, function(player, state, dtime)
-        if state.detected and api.player_is_draining(player) then
+        if state.detected and api.is_player_draining(player) then
             local player_name = player:get_player_name()
             hunger_ng.alter_hunger(player_name, -( settings.drain_rate * dtime), 'Sprinting')
         end
@@ -71,9 +71,9 @@ api.register_server_step(your_mod_name , "SPRINT_CANCELLATIONS", settings.cancel
 
     local cancel = false
 
-	if settings.liquid and dg_sprint_core.IsNodeLiquid(player, node_pos) then
+	if settings.liquid and api.tools.node_is_liquid(player, node_pos) then
         cancel = true
-    elseif settings.snow and dg_sprint_core.IsNodeSnow(player, node_pos) then
+    elseif settings.snow and api.tools.node_is_snowy_group(player, node_pos) then
         cancel = true
     elseif settings.starve and settings.enable_sprint then
         if settings.starve_below == -1 then return end
