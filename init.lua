@@ -57,7 +57,7 @@ end)
 
 if settings.enable_sprint then
     api.register_server_step(your_mod_name, "DRAIN", settings.drain_step, function(player, state, dtime)
-        if state.detected then
+        if state.detected and api.player_is_draining(player) then
             local player_name = player:get_player_name()
             hunger_ng.alter_hunger(player_name, -( settings.drain_rate * dtime), 'Sprinting')
         end
