@@ -1,6 +1,6 @@
 local your_mod_name = core.get_current_modname()
 
-local api = dg_sprint_core.v2
+local api = dg_sprint_core
 
 local function get_settings_boolean(setting_name, default)
     return core.settings:get_bool(setting_name, default)
