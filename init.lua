@@ -56,33 +56,43 @@ api.register_server_step(your_mod_name, "SPRINT", settings.sprint_step, function
 end)
 
 if settings.enable_sprint then
-    api.register_server_step(your_mod_name, "DRAIN", settings.drain_step, function(player, state, dtime)
-        if state.detected and api.is_player_draining(player) then
-            local player_name = player:get_player_name()
-            hunger_ng.alter_hunger(player_name, -( settings.drain_rate * dtime), 'Sprinting')
-        end
-    end)
+	api.register_server_step(your_mod_name, "DRAIN", settings.drain_step, function(player, state, dtime)
+        	if state.detected and api.is_player_draining(player) then
+            		local player_name = player:get_player_name()
+            		hunger_ng.alter_hunger(player_name, -( settings.drain_rate * dtime), 'Sprinting')
+        	end
+    	end)
 end
 
 api.register_server_step(your_mod_name , "SPRINT_CANCELLATIONS", settings.cancel_step, function(player, state, dtime)
     
-    local pos = player:get_pos()
-    local node_pos = { x = pos.x, y = pos.y + 0.5, z = pos.z }
+	local pos = player:get_pos()
+		
+    	local node_pos = { x = pos.x, y = pos.y + 0.5, z = pos.z }
 
-    local cancel = false
+    	local cancel = false
 
 	if settings.liquid and api.tools.node_is_liquid(player, node_pos) then
-        cancel = true
-    elseif settings.snow and api.tools.node_is_snowy_group(player, node_pos) then
-        cancel = true
-    elseif settings.starve and settings.enable_sprint then
-        if settings.starve_below == -1 then return end
-        local info = hunger_ng.get_hunger_information(player:get_player_name())
-        if info.hunger.exact <= settings.starve_below then
-            cancel = true
-        end
-    end
+			
+        	cancel = true
+			
+    	elseif settings.snow and api.tools.node_is_snowy_group(player, node_pos) then
+			
+        	cancel = true
+			
+    	elseif settings.starve and settings.enable_sprint 
+			
+        	if settings.starve_below == -1 then return end
+			
+        	local info = hunger_ng.get_hunger_information(player:get_player_name())
+			
+        	if info.hunger.exact <= settings.starve_below then
+				
+            		cancel = true
+				
+		end
+	end
 
-    api.set_sprint_cancel(player, cancel, your_mod_name .. ":SPRINT_CANCELLATIONS")
+    	api.set_sprint_cancel(player, cancel, your_mod_name .. ":SPRINT_CANCELLATIONS")
 end)
 
