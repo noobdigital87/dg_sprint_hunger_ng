@@ -3,11 +3,11 @@ local your_mod_name = core.get_current_modname()
 local api = dg_sprint_core
 
 local function get_settings_boolean(setting_name, default)
-    return core.settings:get_bool(setting_name, default)
+	return core.settings:get_bool(setting_name, default)
 end
 
 local function get_settings_number(setting_name, default)
-    return tonumber(core.settings:get(setting_name)) or default
+	return tonumber(core.settings:get(setting_name)) or default
 end
 
 local settings = {
@@ -34,7 +34,7 @@ local settings = {
 }
 
 api.register_server_step(your_mod_name, "DETECT", settings.detection_step, function(player, state, dtime)
-    local control = player:get_player_control()
+	local control = player:get_player_control()
 	local detected = api.sprint_key_detected(player, (settings.aux1 and control.aux1), (settings.double_tap and control.up), settings.tap_interval)
 	if detected ~= state.detected then
 		state.detected = detected
@@ -42,17 +42,17 @@ api.register_server_step(your_mod_name, "DETECT", settings.detection_step, funct
 end)
 
 api.register_server_step(your_mod_name, "SPRINT", settings.sprint_step, function(player, state, dtime)
-    if not settings.fov then
-        settings.fov_value = 0
-    end
+	if not settings.fov then
+		settings.fov_value = 0
+    	end
 
-    if state.detected then
-        local sprint_settings = {speed = settings.speed, jump = settings.jump, particles = settings.particles, fov = settings.fov_value, transition = settings.fov_time_start}
-        api.set_sprint(your_mod_name, player, state.detected, sprint_settings)
-    else
-        local sprint_settings = {speed = settings.speed, jump = settings.jump, particles = settings.particles, fov = settings.fov_value, transition = settings.fov_time_stop}
-        api.set_sprint(your_mod_name, player, state.detected, sprint_settings)
-    end
+    	if state.detected then
+        	local sprint_settings = {speed = settings.speed, jump = settings.jump, particles = settings.particles, fov = settings.fov_value, transition = settings.fov_time_start}
+		api.set_sprint(your_mod_name, player, state.detected, sprint_settings)
+    	else
+        	local sprint_settings = {speed = settings.speed, jump = settings.jump, particles = settings.particles, fov = settings.fov_value, transition = settings.fov_time_stop}
+        	api.set_sprint(your_mod_name, player, state.detected, sprint_settings)
+    	end
 end)
 
 if settings.enable_sprint then
@@ -72,27 +72,21 @@ api.register_server_step(your_mod_name , "SPRINT_CANCELLATIONS", settings.cancel
 
     	local cancel = false
 
-	if settings.liquid and api.tools.node_is_liquid(player, node_pos) then
-			
+	local control = player:get_player_control()
+		
+	if control.down then
+		cancel = true	
+	elseif settings.liquid and api.tools.node_is_liquid(player, node_pos) then
         	cancel = true
-			
     	elseif settings.snow and api.tools.node_is_snowy_group(player, node_pos) then
-			
         	cancel = true
-			
     	elseif settings.starve and settings.enable_sprint 
-			
         	if settings.starve_below == -1 then return end
-			
         	local info = hunger_ng.get_hunger_information(player:get_player_name())
-			
-        	if info.hunger.exact <= settings.starve_below then
-				
-            		cancel = true
-				
+        	if info.hunger.exact <= settings.starve_below then	
+            		cancel = true	
 		end
 	end
-
     	api.set_sprint_cancel(player, cancel, your_mod_name .. ":SPRINT_CANCELLATIONS")
 end)
 
