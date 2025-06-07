@@ -80,7 +80,7 @@ api.register_server_step(your_mod_name , "SPRINT_CANCELLATIONS", settings.cancel
         	cancel = true
     	elseif settings.snow and api.tools.node_is_snowy_group(player, node_pos) then
         	cancel = true
-    	elseif settings.starve and settings.enable_sprint 
+    	elseif settings.starve and settings.enable_sprint then
         	if settings.starve_below == -1 then return end
         	local info = hunger_ng.get_hunger_information(player:get_player_name())
         	if info.hunger.exact <= settings.starve_below then	
